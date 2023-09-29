@@ -1,0 +1,17 @@
+{
+  "name": "fiction-compiler",
+  "version": "1.0.0",
+  "description": "Multifile Markdown compiler",
+  "main": "tome.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Lee Grey",
+  "dependencies": {
+    "markdown": "^0.5.0"
+  },
+
+  "bin": {
+    "tome": "./tome.js"
+  }
+}
