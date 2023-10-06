@@ -1,6 +1,6 @@
 [
   {
-    "rootDir": "/manuscript",
+    "source": "/manuscript",
     "outputFile": "/www/compiled_document.html",
     "title" : "Example Document"
   }

@@ -47,21 +47,27 @@ var jobs = null;
 if (argv.length >= 3  ) {
 
   var commands = argv.slice(2);
-  var pathToSourceDir =  "/";// process.cwd();
-  var pathToOutputFile = "/" + commands[0];
+  var pathToSource = "" + commands[0];
+  var pathToOutputFile = null;
   
-  if (fs.existsSync(pathToSourceDir)) {
-
-      jobs = [];
-      jobs.push({
-        rootDir: pathToSourceDir,
-        outputFile: pathToOutputFile
-      });
-
-  } else {
-    console.log("Path does not exist:", pathToSourceDir);
+  if (!fs.existsSync(pathToSource)) {
+    console.log("Path does not exist:", pathToSource);
     process.exit();
+    return;
   }
+
+  if (commands.length > 1) {
+    pathToOutputFile = commands[1];
+  } else {
+    pathToOutputFile = changeSuffix(pathToSource, "html");
+  }
+  
+  jobs = [];
+  jobs.push({
+    source: pathToSource,
+    outputFile: pathToOutputFile
+  });
+
 }
 
 // if the jobs were not derived from the CLI arguments, 
@@ -79,15 +85,28 @@ if (jobs == null) {
   jobs = JSON.parse(config);
 }
 
-
-/// MAIN Execution //////
+/// Job Execution ///
 jobs.forEach( (job) => {    
 
-    var data = "";
-    var root = process.cwd() + job.rootDir;
-    
-    files = getAllFiles(root);
+    console.log("job" , job)
 
+    var data = "";
+    var source = process.cwd() + "/" + job.source;
+
+    console.log("fill source path: ", source)
+
+    let sourceStats = fs.statSync(source);
+    var sourceIsSingleFile = sourceStats.isFile();
+  
+    // create the list of files. If the source is a directory
+    // collect all the files from that directory
+    var files = null;
+    if (sourceIsSingleFile) {
+      files = [source];
+    } else {
+      files = getAllFiles(source);
+    }
+    
     var documentContents = [];
 
     files.forEach((file) => {
@@ -126,7 +145,7 @@ jobs.forEach( (job) => {
 
     const compiled = parse(combinedTexts, job.title || "");
 
-    var outputFileFullPath = process.cwd() + job.outputFile;
+    var outputFileFullPath = process.cwd() + "/" + job.outputFile;
 
     // clean the path
     outputFileFullPath = path.resolve(outputFileFullPath);
@@ -147,7 +166,7 @@ jobs.forEach( (job) => {
 
     fs.writeFileSync(outputFileFullPath, compiled);
 
-    console.log("Finished:", job.title || job.rootDir);
+    console.log("Finished:", job.title || job.source);
 });
 
 function ensureDirectoryExistence(filePath) {
