@@ -33,15 +33,15 @@ Called without arguments, this version just looks for the `tome.json` file, and 
 
 If one argument is supplied, tome interprets this as a source file or directory. The output file will be saved alongside the source file or directory, using the same name as the source, with the new suffix `.html`.
 
-`tome source-file.md` 
-`tome directory-name` 
+`tome source-file.md`  
+`tome directory-name`  
 
 ### Two Argument
 
 If two arguments are supplied, the source file or directory will be parsed and saved to the destination path.
 
-`tome source-file.md manuscript.html` 
-`tome directory-name manuscript.html`
+`tome source-file.md manuscript.html`   
+`tome directory-name manuscript.html`   
 
 ### Configuring a Project with `tome.js`
 
